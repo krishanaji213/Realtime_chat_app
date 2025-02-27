@@ -7,8 +7,8 @@ import { connectDB } from "./lib/db.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { app, server } from "./lib/socket.js";
-import path from "path";  // ✅ Import path module
-import { fileURLToPath } from "url";  // ✅ Required for ES modules
+import path from "path";
+import { fileURLToPath } from "url";
 
 // ✅ Fix __dirname for ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -27,10 +27,12 @@ app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+  // ✅ Correct the frontend path
+  const frontendPath = path.join(__dirname, "../../frontend/dist");
+  app.use(express.static(frontendPath));
 
   app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+    res.sendFile(path.join(frontendPath, "index.html"));
   });
 }
 
